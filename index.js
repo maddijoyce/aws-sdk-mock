@@ -23,10 +23,12 @@ var services = {};
  */
 AWS.setSDK = function(path) {
   _AWS = require(path);
+  setPromises();
 };
 
 AWS.setSDKInstance = function(sdk) {
   _AWS = sdk;
+  setPromises();
 };
 
 /**
@@ -258,8 +260,8 @@ function restoreMethod(service, method) {
 
 }
 
-(function(){
-  var setPromisesDependency = _AWS.config.setPromisesDependency;
+function setPromises() {
+  var setPromisesDependency = _AWS.config && _AWS.config.setPromisesDependency;
   /* istanbul ignore next */
   /* only to support for older versions of aws-sdk */
   if (typeof(setPromisesDependency) === 'function') {
@@ -269,6 +271,8 @@ function restoreMethod(service, method) {
       return setPromisesDependency(p);
     };
   }
-})();
+}
+
+setPromises();
 
 module.exports = AWS;
